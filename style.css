@@ -1,163 +1,39 @@
-/* 全局重置 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* 基础背景色 */
+body {
+    background-color: #0A0A0C;
+    margin: 0;
+    overflow-x: hidden;
+    color: #F5F5F7;
+    font-family: 'Inter', -apple-system, sans-serif;
 }
 
-body, html {
-  height: 100%;
-  background-color: #0a0a0a;  /* 深色背景 */
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
+/* 噪点质感 */
+.noise-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    opacity: 0.04;
+    z-index: 999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* 导航栏 - 悬浮玻璃效果 */
-.nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;
-  background: rgba(10, 10, 20, 0.3);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+/* 导航栏毛玻璃 */
+.glass-nav {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(10, 10, 12, 0.75);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.nav-inner {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* 核心 LOGO 样式 */
+.logo-img {
+    height: 32px;
+    width: auto;
+    filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.3));
+    transition: transform 0.3s ease;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-.logo span {
-  font-size: 0.9rem;
-  font-weight: 300;
-  color: #00f0ff;
-  margin-left: 0.5rem;
-}
-
-nav a {
-  color: #fff;
-  text-decoration: none;
-  margin-left: 2rem;
-  font-size: 1rem;
-  transition: color 0.3s, text-shadow 0.3s;
-}
-nav a:hover {
-  color: #00f0ff;
-  text-shadow: 0 0 10px #00f0ff;
-}
-
-/* hero 区域 - 占满视口，作为 three.js 背景的容器 */
-.hero {
-  position: relative;
-  width: 100%;
-  height: 100vh;  /* 全屏高度 */
-  overflow: hidden;
-}
-
-/* 两个 canvas 都绝对定位，铺满 hero */
-#stars,
-#three-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: auto; /* 让点击事件穿透到 three.js */
-}
-
-/* three-container 需要允许事件，因为球体需要点击 */
-#three-container canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* 前景内容 */
-.hero-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 20;
-  pointer-events: none; /* 让点击穿透到 canvas，但按钮需要可点 */
-}
-.hero-content h1 {
-  font-size: 4rem;
-  font-weight: 600;
-  line-height: 1.2;
-  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-}
-.hero-content p {
-  font-size: 1.2rem;
-  max-width: 600px;
-  margin: 1.5rem auto;
-  color: #ccc;
-}
-.hero-content .cta {
-  display: inline-block;
-  padding: 1rem 2.5rem;
-  border: 1px solid #00f0ff;
-  color: #00f0ff;
-  text-decoration: none;
-  font-weight: 600;
-  border-radius: 40px;
-  backdrop-filter: blur(4px);
-  transition: background 0.3s, box-shadow 0.3s;
-  pointer-events: auto; /* 按钮可点击 */
-}
-.hero-content .cta:hover {
-  background: #00f0ff;
-  color: #0a0a0a;
-  box-shadow: 0 0 30px #00f0ff;
-}
-
-/* 节点信息面板样式（已在你的 CSS 中，保留） */
-#nodePanel {
-  position: fixed;
-  right: 40px;
-  bottom: 40px;
-  width: 260px;
-  background: rgba(10, 10, 12, 0.85);
-  backdrop-filter: blur(14px);
-  border: 1px solid #00F0FF;
-  padding: 20px;
-  display: none;
-  z-index: 200;
-  color: #fff;
-  border-radius: 8px;
-}
-#nodePanel h3 {
-  margin-top: 0;
-  color: #00f0ff;
-}
-#nodePanel button {
-  margin-top: 10px;
-  border: none;
-  padding: 8px 14px;
-  background: #00F0FF;
-  cursor: pointer;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-footer {
-  position: fixed;
-  bottom: 1rem;
-  left: 1rem;
-  font-size: 0.8rem;
-  color: #555;
-  z-index: 200;
+.logo-container:hover .logo-img {
+    transform: scale(1.05) rotate(-2deg);
 }
