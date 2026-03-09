@@ -1,151 +1,125 @@
-const canvas = document.getElementById("ai-canvas");
+// 初始化场景 [cite: 8]
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 
-const ctx = canvas.getContext("2d");
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById("three-container").appendChild(renderer.domElement);
+camera.position.z = 18;
 
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+// 光源
+const light = new THREE.PointLight(0x5ff6ff, 2);
+light.position.set(10, 10, 10);
+scene.add(light);
 
+// V3 核心：镂空旋转几何体 [cite: 8]
+const coreGeo = new THREE.IcosahedronGeometry(2.5, 2);
+const coreMat = new THREE.MeshStandardMaterial({
+    color: 0x5ff6ff,
+    wireframe: true, // 镂空效果
+    emissive: 0x002222
+});
+const core = new THREE.Mesh(coreGeo, coreMat);
+scene.add(core);
 
-let nodes=[];
+// 星云粒子
+const starGeo = new THREE.BufferGeometry();
+const starPos = [];
+for(let i=0; i<1500; i++) {
+    starPos.push((Math.random()-0.5)*100, (Math.random()-0.5)*100, (Math.random()-0.5)*100);
+}
+starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPos, 3));
+const starMat = new THREE.PointsMaterial({ color: 0x5ff6ff, size: 0.2 });
+const stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
 
-let mouse={x:0,y:0};
+// 节点数据与生成
+const nodeData = [
+    {name:"AI Vision", desc:"视觉神经系统"},
+    {name:"NLP", desc:"语言理解引擎"},
+    {name:"Quantum Compute", desc:"量子计算单元"},
+    {name:"Robotics", desc:"自动化控制"},
+    {name:"Neural Link", desc:"脑机接口预研"}
+];
+const nodes = [];
+nodeData.forEach((data, i) => {
+    const geo = new THREE.SphereGeometry(0.4, 32, 32);
+    const mat = new THREE.MeshStandardMaterial({ color: 0x5ff6ff, emissive: 0x001111 });
+    const node = new THREE.Mesh(geo, mat);
+    node.position.x = Math.cos(i * 1.2) * 9;
+    node.position.y = Math.sin(i * 1.2) * 6;
+    node.userData = data;
+    scene.add(node);
+    nodes.push(node);
+});
 
+// 交互：射线检测 [cite: 8]
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
 
-window.addEventListener("mousemove",e=>{
+window.addEventListener("mousemove", e => {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    
+    // 鼠标视差效果
+    camera.position.x = (e.clientX / window.innerWidth - 0.5) * 2;
+    camera.position.y = -(e.clientY / window.innerHeight - 0.5) * 2;
+});
 
-mouse.x=e.clientX
-mouse.y=e.clientY
+window.addEventListener("click", () => {
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(nodes);
+    if (intersects.length > 0) {
+        openPanel(intersects[0].object.userData);
+    }
+});
 
-})
-
-
-for(let i=0;i<80;i++){
-
-nodes.push({
-
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-
-vx:(Math.random()-.5)*.6,
-vy:(Math.random()-.5)*.6,
-
-title:"AI Node "+i,
-
-desc:"Neural computation unit"
-
-})
-
+// UI 控制函数
+function openPanel(data) {
+    const panel = document.getElementById("node-panel");
+    document.getElementById("node-title").innerText = data.name;
+    document.getElementById("node-desc").innerText = data.desc;
+    panel.style.display = "block";
 }
 
-
-
-function draw(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height)
-
-
-nodes.forEach(n=>{
-
-n.x+=n.vx
-n.y+=n.vy
-
-
-if(n.x<0||n.x>canvas.width) n.vx*=-1
-if(n.y<0||n.y>canvas.height) n.vy*=-1
-
-
-let dx=n.x-mouse.x
-let dy=n.y-mouse.y
-
-let dist=Math.sqrt(dx*dx+dy*dy)
-
-
-ctx.beginPath()
-
-ctx.arc(n.x,n.y,dist<100?4:2,0,Math.PI*2)
-
-ctx.fillStyle="#5ff6ff"
-
-ctx.fill()
-
-})
-
-
-
-for(let i=0;i<nodes.length;i++){
-
-for(let j=i+1;j<nodes.length;j++){
-
-let dx=nodes[i].x-nodes[j].x
-let dy=nodes[i].y-nodes[j].y
-
-let dist=Math.sqrt(dx*dx+dy*dy)
-
-
-if(dist<140){
-
-ctx.beginPath()
-
-ctx.moveTo(nodes[i].x,nodes[i].y)
-
-ctx.lineTo(nodes[j].x,nodes[j].y)
-
-ctx.strokeStyle="rgba(95,246,255,.15)"
-
-ctx.stroke()
-
+function closePanel() {
+    document.getElementById("node-panel").style.display = "none";
 }
 
+function toggleExplorerMode() {
+    document.body.classList.toggle("machine-mode");
+    // 切换模式时改变核心颜色
+    core.material.color.set(document.body.classList.contains("machine-mode") ? 0xff00ff : 0x5ff6ff);
 }
 
+function scrollToTop() {
+    window.scrollTo({top: 0, behavior: "smooth"});
 }
 
+// 动画循环
+function animate() {
+    requestAnimationFrame(animate);
+    
+    // 核心旋转
+    core.rotation.x += 0.002;
+    core.rotation.y += 0.003;
+    
+    // 星云自转
+    stars.rotation.y += 0.0003;
+    
+    // 节点微动
+    nodes.forEach(n => {
+        n.position.y += Math.sin(Date.now() * 0.001) * 0.002;
+    });
 
-requestAnimationFrame(draw)
-
+    renderer.render(scene, camera);
 }
 
-draw()
+// 窗口适配
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-
-canvas.addEventListener("click",e=>{
-
-nodes.forEach(n=>{
-
-let dx=n.x-e.clientX
-let dy=n.y-e.clientY
-
-if(Math.sqrt(dx*dx+dy*dy)<6){
-
-openPanel(n)
-
-}
-
-})
-
-})
-
-
-function openPanel(n){
-
-document.getElementById("node-panel").style.display="block"
-
-document.getElementById("node-title").innerText=n.title
-
-document.getElementById("node-desc").innerText=n.desc
-
-}
-
-
-function toggleExplorerMode(){
-
-document.body.classList.toggle("machine-mode")
-
-}
-
-
-function scrollToTop(){
-
-window.scrollTo({top:0,behavior:"smooth"})
-
-}
+animate();
