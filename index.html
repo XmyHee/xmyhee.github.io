@@ -8,16 +8,18 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 </head>
 <body>
+
 <nav class="global-nav">
     <div class="nav-inner">
-        <div class="logo" onclick="scrollToTop()">
-            <img src="logo.png">
-            <span class="logo-text">QuestFrontiers | 求索映界</span>
+        <div class="logo" onclick="location.reload()">
+            <img src="logo.png" alt="Logo">
+            <span class="logo-text">QuestFrontiers</span>
         </div>
         <div class="nav-icons">
-            <div class="nav-item"><span class="icon">◎</span><p>疆域</p></div>
-            <div class="nav-item"><span class="icon">◉</span><p>引擎</p></div>
+            <div class="nav-item"><span class="icon">◎</span><p>前沿疆域</p></div>
+            <div class="nav-item"><span class="icon">◉</span><p>映照引擎</p></div>
             <div class="explorer-toggle" onclick="toggleExplorerMode()">
+                <span class="toggle-label">探索者模式</span>
                 <div class="toggle-switch"><div class="toggle-dot"></div></div>
             </div>
         </div>
@@ -29,14 +31,14 @@
     <div class="energy-core"></div>
     <div class="hero-center">
         <h1>QuestFrontiers</h1>
-        <p>探索智能 · 映照未来</p>
+        <p>探索智能 · 映照万象</p>
     </div>
 </section>
 
 <div id="node-panel">
-    <h3 id="node-title"></h3>
-    <p id="node-desc"></p>
-    <button onclick="closePanel()">返回</button>
+    <h3 id="node-title">AI Node</h3>
+    <p id="node-desc">神经计算单元已就绪</p>
+    <button onclick="closePanel()">返回系统</button>
 </div>
 
 <script src="script.js"></script>
