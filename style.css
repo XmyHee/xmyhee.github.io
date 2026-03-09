@@ -1,139 +1,58 @@
-body{
-margin:0;
-font-family:Inter;
-background:#050507;
-color:#F5F5F7;
-overflow-x:hidden;
+body {
+    margin: 0; background: #05070f; color: white;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden; touch-action: none; transition: background 0.5s ease;
 }
 
-
-/* NAV */
-
-.nav{
-position:fixed;
-top:0;
-width:100%;
-background:rgba(10,10,12,0.6);
-backdrop-filter:blur(14px);
-z-index:10;
+#three-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
 }
 
-.nav-inner{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:16px 60px;
+/* 导航栏 [cite: 88, 89] */
+.global-nav {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 1300px;
+    backdrop-filter: blur(14px); background: rgba(10, 15, 35, 0.4);
+    border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08); z-index: 1000;
 }
 
+.nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 30px; }
+.logo { display: flex; align-items: center; gap: 12px; cursor: pointer; font-weight: 600; }
+.logo img { width: 36px; }
 
-.logo{
-display:flex;
-align-items:center;
-font-weight:600;
+/* 英雄区文本 [cite: 96, 97] */
+.hero h1 { 
+    font-size: clamp(2.5rem, 10vw, 4.5rem); 
+    background: linear-gradient(90deg, #fff, #5ff6ff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 
-.logo-img{
-height:34px;
-width:auto;
-margin-right:10px;
+/* 探索者模式切换 [cite: 93, 94] */
+.explorer-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.toggle-switch { width: 46px; height: 24px; border-radius: 20px; background: rgba(255,255,255,0.15); position: relative; transition: 0.3s; }
+.toggle-dot { width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s; }
 
-transform:translateZ(0);
-will-change:transform;
+body.machine-mode .toggle-switch { background: #5ff6ff; }
+body.machine-mode .toggle-dot { left: 25px; }
 
-filter:drop-shadow(0 0 6px rgba(255,255,255,0.3));
+/* 能量环 [cite: 98, 99] */
+.energy-core {
+    position: absolute; width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(95,246,255,0.2), transparent);
+    filter: blur(40px); animation: pulse 4s infinite; z-index: -1;
 }
 
+@keyframes pulse { 0%, 100% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 0.8; } }
 
-nav a{
-margin-left:26px;
-color:#8E8E93;
-text-decoration:none;
+#node-panel {
+    position: fixed; bottom: 30px; right: 30px; width: 260px;
+    background: rgba(20, 25, 50, 0.7); backdrop-filter: blur(10px);
+    border-radius: 14px; padding: 20px; display: none; border: 1px solid #5ff6ff;
 }
 
-nav a:hover{
-color:#00F0FF;
-}
+#node-panel button { width: 100%; padding: 10px; background: #5ff6ff; border: none; cursor: pointer; margin-top: 15px; border-radius: 5px; font-weight: bold; }
 
-
-
-/* HERO */
-
-.hero{
-height:100vh;
-position:relative;
-}
-
-#three-container{
-width:100%;
-height:100%;
-}
-
-.hero-text{
-
-position:absolute;
-
-top:50%;
-left:50%;
-
-transform:translate(-50%,-50%);
-
-text-align:center;
-}
-
-.hero-text h1{
-font-size:64px;
-margin-bottom:20px;
-}
-
-.hero-text p{
-color:#8E8E93;
-}
-
-
-
-/* NODE PANEL */
-
-#nodePanel{
-
-position:fixed;
-
-right:40px;
-bottom:40px;
-
-width:260px;
-
-background:rgba(10,10,12,0.9);
-
-border:1px solid #00F0FF;
-
-padding:20px;
-
-display:none;
-
-backdrop-filter:blur(10px);
-
-}
-
-#nodePanel button{
-
-margin-top:10px;
-
-border:none;
-
-padding:8px 14px;
-
-background:#00F0FF;
-
-cursor:pointer;
-
-}
-
-
-
-/* FOOTER */
-
-footer{
-text-align:center;
-padding:40px;
-color:#8E8E93;
+@media (max-width: 768px) {
+    .logo-text, .toggle-label, .nav-item p { display: none; }
+    #node-panel { left: 5%; right: 5%; width: 90%; bottom: 20px; }
 }
