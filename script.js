@@ -1,121 +1,166 @@
-// 初始化场景 [cite: 8]
+let isExplorerMode = false;
+let gyro = { b: 0, g: 0 };
+const nodes = [];
+const nodeCount = 15; // 节点密度
+
+// --- 初始化场景 ---
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById("three-container").appendChild(renderer.domElement);
-camera.position.z = 18;
+camera.position.z = 22;
 
-// 光源
+// --- 1. 创建3D核心（V7镂空 + V8颜色切换）---
+const core = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(3, 2),
+    new THREE.MeshStandardMaterial({ color: 0x5ff6ff, wireframe: true, transparent: true, opacity: 0.6 })
+);
+scene.add(core);
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 const light = new THREE.PointLight(0x5ff6ff, 2);
 light.position.set(10, 10, 10);
 scene.add(light);
 
-// V3 核心：镂空旋转几何体 [cite: 8]
-const coreGeo = new THREE.IcosahedronGeometry(2.5, 2);
-const coreMat = new THREE.MeshStandardMaterial({
-    color: 0x5ff6ff,
-    wireframe: true, // 镂空效果
-    emissive: 0x002222
-});
-const core = new THREE.Mesh(coreGeo, coreMat);
-scene.add(core);
-
-// 星云粒子
-const starGeo = new THREE.BufferGeometry();
-const starPos = [];
-for(let i=0; i<1500; i++) {
-    starPos.push((Math.random()-0.5)*100, (Math.random()-0.5)*100, (Math.random()-0.5)*100);
-}
-starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPos, 3));
-const starMat = new THREE.PointsMaterial({ color: 0x5ff6ff, size: 0.2 });
-const stars = new THREE.Points(starGeo, starMat);
-scene.add(stars);
-
-// 节点数据与生成
-const nodeData = [
-    {name:"AI Vision", desc:"视觉神经系统"},
-    {name:"NLP", desc:"语言理解引擎"},
-    {name:"Quantum Compute", desc:"量子计算单元"},
-    {name:"Robotics", desc:"自动化控制"},
-    {name:"Neural Link", desc:"脑机接口预研"}
-];
-const nodes = [];
-nodeData.forEach((data, i) => {
-    const geo = new THREE.SphereGeometry(0.4, 32, 32);
-    const mat = new THREE.MeshStandardMaterial({ color: 0x5ff6ff, emissive: 0x001111 });
-    const node = new THREE.Mesh(geo, mat);
-    node.position.x = Math.cos(i * 1.2) * 9;
-    node.position.y = Math.sin(i * 1.2) * 6;
-    node.userData = data;
-    scene.add(node);
+// --- 2. 创建神经元节点（V8随机漂浮）---
+const nodeGroup = new THREE.Group();
+for (let i = 0; i < nodeCount; i++) {
+    const node = new THREE.Mesh(
+        new THREE.SphereGeometry(0.2, 16, 16),
+        new THREE.MeshStandardMaterial({ color: 0x5ff6ff, emissive: 0x5ff6ff })
+    );
+    // 随机分布
+    node.position.set((Math.random() - 0.5) * 25, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10);
+    // 运动向量
+    node.userData = {
+        vel: new THREE.Vector3((Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02),
+        title: "神经单元 " + (i + 1),
+        desc: "量子纠缠态连接中..."
+    };
     nodes.push(node);
-});
+    nodeGroup.add(node);
+}
+scene.add(nodeGroup);
 
-// 交互：射线检测 [cite: 8]
+// --- 3. 神经元动态连线系统 ---
+const lineMat = new THREE.LineBasicMaterial({ color: 0x5ff6ff, transparent: true, opacity: 0.2 });
+const lineGeo = new THREE.BufferGeometry();
+const lineMesh = new THREE.LineSegments(lineGeo, lineMat);
+scene.add(lineMesh);
+
+// --- 4. 数据雨粒子系统（V8特有）---
+const rainGeo = new THREE.BufferGeometry();
+const rainPos = new Float32Array(1500 * 3);
+for (let i = 0; i < rainPos.length; i++) rainPos[i] = (Math.random() - 0.5) * 100;
+rainGeo.setAttribute('position', new THREE.BufferAttribute(rainPos, 3));
+const rainMat = new THREE.PointsMaterial({ color: 0x5ff6ff, size: 0.1, transparent: true, opacity: 0 });
+const dataRain = new THREE.Points(rainGeo, rainMat);
+scene.add(dataRain);
+
+// --- 交互功能 ---
+async function toggleExplorerMode() {
+    isExplorerMode = !isExplorerMode;
+    document.body.classList.toggle("machine-mode");
+    const color = isExplorerMode ? 0xff00ff : 0x5ff6ff;
+
+    // 视觉颜色切换
+    core.material.color.set(color);
+    lineMat.color.set(color);
+    rainMat.opacity = isExplorerMode ? 0.6 : 0;
+    nodes.forEach(n => n.material.color.set(color));
+
+    // 移动端陀螺仪权限请求
+    if (isExplorerMode && typeof DeviceOrientationEvent?.requestPermission === 'function') {
+        try {
+            const res = await DeviceOrientationEvent.requestPermission();
+            if (res === 'granted') {
+                window.addEventListener("deviceorientation", e => {
+                    gyro.b = e.beta;
+                    gyro.g = e.gamma;
+                });
+            }
+        } catch (e) {}
+    } else if (isExplorerMode) {
+        window.addEventListener("deviceorientation", e => {
+            gyro.b = e.beta;
+            gyro.g = e.gamma;
+        });
+    }
+}
+
+// 射线检测（点击节点打开面板）
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-
-window.addEventListener("mousemove", e => {
+window.addEventListener('click', (e) => {
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    
-    // 鼠标视差效果
-    camera.position.x = (e.clientX / window.innerWidth - 0.5) * 2;
-    camera.position.y = -(e.clientY / window.innerHeight - 0.5) * 2;
-});
-
-window.addEventListener("click", () => {
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(nodes);
     if (intersects.length > 0) {
-        openPanel(intersects[0].object.userData);
+        const d = intersects[0].object.userData;
+        document.getElementById("node-title").innerText = d.title;
+        document.getElementById("node-desc").innerText = d.desc;
+        document.getElementById("node-panel").style.display = "block";
     }
 });
-
-// UI 控制函数
-function openPanel(data) {
-    const panel = document.getElementById("node-panel");
-    document.getElementById("node-title").innerText = data.name;
-    document.getElementById("node-desc").innerText = data.desc;
-    panel.style.display = "block";
-}
 
 function closePanel() {
     document.getElementById("node-panel").style.display = "none";
 }
 
-function toggleExplorerMode() {
-    document.body.classList.toggle("machine-mode");
-    // 切换模式时改变核心颜色
-    core.material.color.set(document.body.classList.contains("machine-mode") ? 0xff00ff : 0x5ff6ff);
-}
-
+// 从V7引入的滚动到顶部功能（点击Logo）
 function scrollToTop() {
-    window.scrollTo({top: 0, behavior: "smooth"});
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// 动画循环
+// --- 动画主循环 ---
 function animate() {
     requestAnimationFrame(animate);
-    
-    // 核心旋转
-    core.rotation.x += 0.002;
-    core.rotation.y += 0.003;
-    
-    // 星云自转
-    stars.rotation.y += 0.0003;
-    
-    // 节点微动
+
+    if (isExplorerMode) {
+        // 陀螺仪控制核心旋转
+        core.rotation.x += (gyro.b * 0.001 - core.rotation.x) * 0.1;
+        core.rotation.y += (gyro.g * 0.001 - core.rotation.y) * 0.1;
+
+        // 数据雨向下流动
+        const p = dataRain.geometry.attributes.position.array;
+        for (let i = 1; i < p.length; i += 3) {
+            p[i] -= 0.5;
+            if (p[i] < -50) p[i] = 50;
+        }
+        dataRain.geometry.attributes.position.needsUpdate = true;
+    } else {
+        core.rotation.y += 0.005;
+        core.rotation.x += 0.002;
+    }
+
+    // 节点漂浮运动
     nodes.forEach(n => {
-        n.position.y += Math.sin(Date.now() * 0.001) * 0.002;
+        n.position.add(n.userData.vel);
+        if (Math.abs(n.position.x) > 12) n.userData.vel.x *= -1;
+        if (Math.abs(n.position.y) > 8) n.userData.vel.y *= -1;
     });
+
+    // 动态连线更新（距离小于9的节点间绘制连线）
+    const linePositions = [];
+    for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+            const dist = nodes[i].position.distanceTo(nodes[j].position);
+            if (dist < 9) {
+                linePositions.push(nodes[i].position.x, nodes[i].position.y, nodes[i].position.z);
+                linePositions.push(nodes[j].position.x, nodes[j].position.y, nodes[j].position.z);
+            }
+        }
+    }
+    lineMesh.geometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+    lineMesh.geometry.attributes.position.needsUpdate = true;
 
     renderer.render(scene, camera);
 }
 
-// 窗口适配
+// 窗口自适应
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
