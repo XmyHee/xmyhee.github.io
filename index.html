@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>QuestFrontiers | 求索映界</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
@@ -11,15 +11,16 @@
 
 <nav class="global-nav">
     <div class="nav-inner">
-        <div class="logo" onclick="location.reload()">
-            <img src="logo.png" alt=" ">
-            <span class="logo-text">QuestFrontiers</span>
+        <div class="logo" onclick="scrollToTop()">
+            <img src="logo.png">
+            <span>QuestFrontiers | 求索映界</span>
         </div>
         <div class="nav-icons">
             <div class="nav-item"><span class="icon">◎</span><p>前沿疆域</p></div>
             <div class="nav-item"><span class="icon">◉</span><p>映照引擎</p></div>
+            <div class="nav-item"><span class="icon">⬡</span><p>解决方案</p></div>
             <div class="explorer-toggle" onclick="toggleExplorerMode()">
-                <span class="toggle-label">探索者模式</span>
+                <span>探索者模式</span>
                 <div class="toggle-switch"><div class="toggle-dot"></div></div>
             </div>
         </div>
@@ -36,9 +37,9 @@
 </section>
 
 <div id="node-panel">
-    <h3 id="node-title">AI Node</h3>
-    <p id="node-desc">系统就绪</p>
-    <button onclick="closePanel()">关闭</button>
+    <h3 id="node-title"></h3>
+    <p id="node-desc"></p>
+    <button onclick="closePanel()" style="background:#5ff6ff; border:none; padding:5px 10px; cursor:pointer; margin-top:10px;">关闭</button>
 </div>
 
 <script src="script.js"></script>
