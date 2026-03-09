@@ -210,13 +210,12 @@ function animate() {
     nodes.forEach(n => n.rotation.y += 0.01);
 
     if (isExplorerMode) {
-        // 探索者模式：有陀螺仪数据时随设备转动，否则自动旋转
-        if (gyroActive && (gyro.b !== 0 || gyro.g !== 0)) {
-            // 陀螺仪控制（平滑跟随）
+        // 探索者模式：优先陀螺仪，否则自动旋转
+        if (useGyro && (gyro.b !== 0 || gyro.g !== 0)) {
             core.rotation.x += (gyro.b * 0.001 - core.rotation.x) * 0.05;
             core.rotation.y += (gyro.g * 0.001 - core.rotation.y) * 0.05;
         } else {
-            // 无陀螺仪数据时，保持自动旋转
+            // 无陀螺仪数据时，使用与普通模式相同的自动旋转
             core.rotation.x += 0.002;
             core.rotation.y += 0.003;
         }
