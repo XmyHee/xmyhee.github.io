@@ -1,104 +1,151 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
-import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/controls/OrbitControls.js';
+const canvas = document.getElementById("ai-canvas");
 
-// -----------------------------
-// 场景、相机、渲染器
-// -----------------------------
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0a0a0a);
+const ctx = canvas.getContext("2d");
 
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
-camera.position.set(0, 0, 6);
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 
-// 控制器
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.enablePan = false;
-controls.minDistance = 4;
-controls.maxDistance = 10;
+let nodes=[];
 
-// -----------------------------
-// 中心旋转镂空球体
-// -----------------------------
-const ballGeometry = new THREE.SphereGeometry(1, 64, 64);
-const ballMaterial = new THREE.MeshStandardMaterial({
-    color: 0x00bfff,
-    metalness: 0.8,
-    roughness: 0.2,
-    transparent: true,
-    opacity: 0.9,
-    side: THREE.DoubleSide
-});
-const hollowBall = new THREE.Mesh(ballGeometry, ballMaterial);
-scene.add(hollowBall);
+let mouse={x:0,y:0};
 
-// 镂空线条
-const wireframe = new THREE.WireframeGeometry(ballGeometry);
-const line = new THREE.LineSegments(wireframe);
-line.material.depthTest = true;
-line.material.opacity = 0.6;
-line.material.transparent = true;
-line.material.color = new THREE.Color(0x00bfff);
-scene.add(line);
 
-// -----------------------------
-// 环绕渐变光环
-// -----------------------------
-const glowRingGeometry = new THREE.TorusGeometry(1.2, 0.05, 16, 100);
-const glowRingMaterial = new THREE.MeshBasicMaterial({
-    color: 0x3399ff,
-    transparent: true,
-    opacity: 0.2,
-    blending: THREE.AdditiveBlending,
-    side: THREE.DoubleSide
-});
-const glowRing = new THREE.Mesh(glowRingGeometry, glowRingMaterial);
-glowRing.rotation.x = Math.PI / 2; // 水平放置
-scene.add(glowRing);
+window.addEventListener("mousemove",e=>{
 
-// -----------------------------
-// 光源
-// -----------------------------
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-scene.add(ambientLight);
+mouse.x=e.clientX
+mouse.y=e.clientY
 
-const pointLight = new THREE.PointLight(0x00bfff, 0.5, 10);
-pointLight.position.set(2, 2, 5);
-scene.add(pointLight);
+})
 
-// -----------------------------
-// 动画
-// -----------------------------
-const clock = new THREE.Clock();
 
-function animate() {
-    requestAnimationFrame(animate);
-    const time = clock.getElapsedTime();
+for(let i=0;i<80;i++){
 
-    // 球体旋转
-    hollowBall.rotation.y += 0.003;
-    hollowBall.rotation.x += 0.002;
-    line.rotation.copy(hollowBall.rotation);
+nodes.push({
 
-    // 光环旋转与渐隐
-    glowRing.rotation.z += 0.002;
-    glowRing.material.opacity = 0.1 + 0.1 * Math.sin(time * 0.5);
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
 
-    controls.update();
-    renderer.render(scene, camera);
+vx:(Math.random()-.5)*.6,
+vy:(Math.random()-.5)*.6,
+
+title:"AI Node "+i,
+
+desc:"Neural computation unit"
+
+})
+
 }
 
-animate();
 
-// -----------------------------
-// 窗口自适应
-// -----------------------------
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+
+nodes.forEach(n=>{
+
+n.x+=n.vx
+n.y+=n.vy
+
+
+if(n.x<0||n.x>canvas.width) n.vx*=-1
+if(n.y<0||n.y>canvas.height) n.vy*=-1
+
+
+let dx=n.x-mouse.x
+let dy=n.y-mouse.y
+
+let dist=Math.sqrt(dx*dx+dy*dy)
+
+
+ctx.beginPath()
+
+ctx.arc(n.x,n.y,dist<100?4:2,0,Math.PI*2)
+
+ctx.fillStyle="#5ff6ff"
+
+ctx.fill()
+
+})
+
+
+
+for(let i=0;i<nodes.length;i++){
+
+for(let j=i+1;j<nodes.length;j++){
+
+let dx=nodes[i].x-nodes[j].x
+let dy=nodes[i].y-nodes[j].y
+
+let dist=Math.sqrt(dx*dx+dy*dy)
+
+
+if(dist<140){
+
+ctx.beginPath()
+
+ctx.moveTo(nodes[i].x,nodes[i].y)
+
+ctx.lineTo(nodes[j].x,nodes[j].y)
+
+ctx.strokeStyle="rgba(95,246,255,.15)"
+
+ctx.stroke()
+
+}
+
+}
+
+}
+
+
+requestAnimationFrame(draw)
+
+}
+
+draw()
+
+
+canvas.addEventListener("click",e=>{
+
+nodes.forEach(n=>{
+
+let dx=n.x-e.clientX
+let dy=n.y-e.clientY
+
+if(Math.sqrt(dx*dx+dy*dy)<6){
+
+openPanel(n)
+
+}
+
+})
+
+})
+
+
+function openPanel(n){
+
+document.getElementById("node-panel").style.display="block"
+
+document.getElementById("node-title").innerText=n.title
+
+document.getElementById("node-desc").innerText=n.desc
+
+}
+
+
+function toggleExplorerMode(){
+
+document.body.classList.toggle("machine-mode")
+
+}
+
+
+function scrollToTop(){
+
+window.scrollTo({top:0,behavior:"smooth"})
+
+}
