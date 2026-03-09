@@ -1,64 +1,85 @@
 body {
-    margin: 0; background: #05070f; color: white;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    overflow: hidden; touch-action: none;
+    margin: 0;
+    background: #05070f; /* V7 深邃底色 [cite: 11] */
+    color: white;
+    font-family: 'Segoe UI', Inter, sans-serif;
+    overflow-x: hidden;
 }
 
-/* 3D 容器全屏置底  */
+/* 3D 容器置底 */
 #three-container {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
 }
 
-/* 高级导航栏 [cite: 28, 29] */
+/* V7 导航栏样式 [cite: 12] */
 .global-nav {
-    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 1300px;
-    backdrop-filter: blur(14px); background: rgba(10, 15, 35, 0.4);
-    border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08); z-index: 1000;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1300px;
+    backdrop-filter: blur(14px);
+    background: rgba(10, 15, 35, 0.4);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 1000;
 }
 
-.nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 25px; }
+.nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 30px;
+}
 
-.logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.logo img { height: 30px; }
+.logo { display: flex; align-items: center; gap: 12px; cursor: pointer; font-weight: 600; }
+.logo img { width: 36px; }
 
-.nav-icons { display: flex; gap: 20px; align-items: center; }
-.nav-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; opacity: 0.7; transition: 0.3s; }
-.nav-item:hover { opacity: 1; transform: translateY(-2px); }
-.nav-item .icon { font-size: 18px; }
-.nav-item p { margin: 2px 0 0; font-size: 10px; }
+.nav-icons { display: flex; gap: 28px; align-items: center; }
+.nav-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; cursor: pointer; opacity: .8; transition: .3s; }
+.nav-item:hover { opacity: 1; transform: translateY(-2px); text-shadow: 0 0 8px #5ff6ff; }
 
-/* 探索者模式开关 [cite: 33, 34] */
+/* 探索者模式切换 [cite: 15] */
 .explorer-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.toggle-switch { width: 44px; height: 22px; background: rgba(255,255,255,0.2); border-radius: 20px; position: relative; }
-.toggle-dot { width: 16px; height: 16px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s; }
-
+.toggle-switch { width: 46px; height: 24px; border-radius: 20px; background: rgba(255,255,255,.15); position: relative; }
+.toggle-dot { width: 18px; height: 18px; border-radius: 50%; background: white; position: absolute; top: 3px; left: 3px; transition: .3s; }
 body.machine-mode .toggle-switch { background: #5ff6ff; }
 body.machine-mode .toggle-dot { left: 25px; }
 
-/* 英雄区标题 [cite: 37] */
-.hero { height: 100vh; display: flex; align-items: center; justify-content: center; }
-.hero h1 { 
-    font-size: clamp(2.5rem, 8vw, 4.5rem); margin: 0;
-    background: linear-gradient(90deg, #fff, #5ff6ff);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
+/* HERO 文本 [cite: 16] */
+.hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; }
+.hero h1 { font-size: 70px; letter-spacing: 4px; background: linear-gradient(90deg,#fff,#5ff6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
 
-/* 能量环 [cite: 38] */
+/* 能量环底层装饰 [cite: 17] */
 .energy-core {
-    position: absolute; width: 300px; height: 300px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(95,246,255,0.15), transparent 70%);
-    filter: blur(40px); animation: pulse 4s infinite; z-index: -2;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(95,246,255,0.2), transparent);
+    filter: blur(40px);
+    z-index: -1;
+    animation: pulse 4s infinite;
 }
-@keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.3); opacity: 0.6; } }
 
+@keyframes pulse { 0%, 100% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 0.8; } }
+
+/* 面板 [cite: 18] */
 #node-panel {
-    position: fixed; bottom: 30px; right: 30px; width: 260px;
-    background: rgba(10, 15, 30, 0.8); backdrop-filter: blur(10px);
-    border: 1px solid #5ff6ff; border-radius: 15px; padding: 20px; display: none;
-}
-#node-panel button { width: 100%; padding: 8px; background: #5ff6ff; border: none; cursor: pointer; margin-top: 10px; }
-
-@media (max-width: 768px) {
-    .logo-text, .toggle-label, .nav-item p { display: none; }
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 260px;
+    background: rgba(20, 25, 50, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
+    padding: 20px;
+    display: none;
+    border: 1px solid #5ff6ff;
 }
