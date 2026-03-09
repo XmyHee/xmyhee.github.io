@@ -1,20 +1,94 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuestFrontiers | 求索映界</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>QuestFrontiers | 求索映界</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+
 </head>
+
+
 <body>
-    <div id="root"></div>
-    <div class="noise-overlay"></div>
-    <script type="text/babel" src="script.js"></script>
+
+
+<header class="nav">
+
+<div class="nav-inner">
+
+<div class="logo">
+QuestFrontiers
+<span>求索映界</span>
+</div>
+
+<nav>
+<a href="#frontiers">前沿疆域</a>
+<a href="#engine">映照引擎</a>
+<a href="#solutions">解决方案</a>
+</nav>
+
+</div>
+
+</header>
+
+
+
+<section class="hero">
+
+<canvas id="stars"></canvas>
+
+<div id="three-container"></div>
+
+
+<div class="hero-content">
+
+<h1>
+求索无界<br>
+映照万象
+</h1>
+
+<p>
+融合 AI 前沿科技，为复杂工程与决策提供
+可量化、可信赖的技术映射
+</p>
+
+<a class="cta">进入疆域</a>
+
+</div>
+
+</section>
+
+
+<!-- 节点信息面板 -->
+
+<div id="nodePanel">
+
+<h3 id="nodeTitle"></h3>
+
+<p id="nodeDesc"></p>
+
+<button onclick="closePanel()">关闭</button>
+
+</div>
+
+
+
+<footer>
+
+QuestFrontiers © 2026
+
+</footer>
+
+
+<script src="script.js"></script>
+
 </body>
+
 </html>
