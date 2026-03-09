@@ -1,1 +1,40 @@
+#nodePanel{
 
+position:fixed;
+
+right:40px;
+bottom:40px;
+
+width:260px;
+
+background:rgba(10,10,12,0.85);
+
+backdrop-filter:blur(14px);
+
+border:1px solid #00F0FF;
+
+padding:20px;
+
+display:none;
+
+z-index:20;
+
+}
+
+#nodePanel h3{
+margin-top:0;
+}
+
+#nodePanel button{
+
+margin-top:10px;
+
+border:none;
+
+padding:8px 14px;
+
+background:#00F0FF;
+
+cursor:pointer;
+
+}
