@@ -1,3 +1,4 @@
+console.log('Three.js script is running');
 const scene = new THREE.Scene()
 
 const camera = new THREE.PerspectiveCamera(
