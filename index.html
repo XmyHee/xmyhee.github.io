@@ -1,89 +1,107 @@
 <!DOCTYPE html>
-<html lang="zh">
-
+<html lang="en">
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>QuestFrontiers | 求索映界</title>
 
-<link rel="preload" href="logo.png" as="image">
-
 <link rel="stylesheet" href="style.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 
 </head>
 
 
 <body>
 
-<header class="nav">
+<!-- NAVIGATION -->
+
+<nav class="global-nav">
 
 <div class="nav-inner">
 
-<div class="logo">
+<div class="logo" onclick="scrollToTop()">
 
-<img src="logo.png" class="logo-img" loading="eager" decoding="async">
+<img src="logo.png">
 
-<span>QuestFrontiers</span>
+<span>QuestFrontiers | 求索映界</span>
 
 </div>
 
-<nav>
 
-<a href="#">疆域</a>
-<a href="#">引擎</a>
-<a href="#">解决方案</a>
+<div class="nav-icons">
+
+<div class="nav-item">
+<span class="icon">◎</span>
+<p>前沿疆域</p>
+</div>
+
+<div class="nav-item">
+<span class="icon">◉</span>
+<p>映照引擎</p>
+</div>
+
+<div class="nav-item">
+<span class="icon">⬡</span>
+<p>解决方案</p>
+</div>
+
+<div class="nav-item">
+<span class="icon">◈</span>
+<p>关于求索</p>
+</div>
+
+
+<div class="explorer-toggle" onclick="toggleExplorerMode()">
+
+<span>探索者模式</span>
+
+<div class="toggle-switch">
+
+<div class="toggle-dot"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </nav>
 
-</div>
 
-</header>
-
-
+<!-- HERO -->
 
 <section class="hero">
 
-<div id="three-container"></div>
+<canvas id="ai-canvas"></canvas>
 
-<div class="hero-text">
+<div class="energy-core"></div>
 
-<h1>求索无界<br>映照万象</h1>
+<div class="hero-center">
 
-<p>AI驱动复杂系统洞察</p>
+<h1>QuestFrontiers</h1>
+
+<p>探索智能 · 映照未来</p>
 
 </div>
 
 </section>
 
 
+<!-- NODE INFO -->
 
-<div id="nodePanel">
+<div id="node-panel">
 
-<h3 id="nodeTitle"></h3>
+<h3 id="node-title"></h3>
 
-<p id="nodeDesc"></p>
-
-<button onclick="closePanel()">关闭</button>
+<p id="node-desc"></p>
 
 </div>
-
-
-
-<footer>
-
-QuestFrontiers © 2026
-
-</footer>
 
 
 <script src="script.js"></script>
 
 </body>
-
 </html>
