@@ -1,37 +1,53 @@
+/* ===== 基础 ===== */
+:root {
+    --primary: #5ff6ff;
+    --bg: #05070f;
+    --glass: rgba(10, 15, 35, 0.4);
+}
+
 body {
     margin: 0;
-    background: #05070f;
+    background: var(--bg);
     color: white;
     font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    overflow: hidden;
-    touch-action: none;
+
+    /* 允许滚动，但隐藏横向 */
+    overflow-x: hidden;
+
+    /* 提升触控响应 */
+    touch-action: manipulation;
 }
 
-/* 3D 容器全屏置底 */
+/* ===== 3D 背景层 ===== */
 #three-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+    inset: 0;
+    z-index: 0;
+
+    /* GPU优化 */
+    will-change: transform;
 }
 
-/* 高级导航栏（玻璃拟态强化） */
+/* ===== 导航栏 ===== */
 .global-nav {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
+
     width: 90%;
     max-width: 1300px;
-    backdrop-filter: blur(14px) !important;
-    -webkit-backdrop-filter: blur(14px) !important;
-    background: rgba(10, 15, 35, 0.4) !important;
+
+    background: var(--glass);
+
+    /* 降级兼容 */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    z-index: 1000;
-    transition: background 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.08);
+
+    z-index: 10;
 }
 
 .nav-inner {
@@ -41,172 +57,202 @@ body {
     padding: 12px 25px;
 }
 
+/* ===== Logo ===== */
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    font-weight: 600;
-}
-.logo img {
-    height: 30px;
-    transition: opacity 0.3s;
-    filter: drop-shadow(0 0 6px rgba(255,255,255,0.3));
+
+    perspective: 800px;
 }
 
+.logo-img {
+    height: 30px;
+
+    transform-style: preserve-3d;
+
+    transition:
+        transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        filter 0.3s;
+
+    /* GPU加速 */
+    will-change: transform;
+}
+
+.logo:hover .logo-img {
+    transform: rotateY(15deg) rotateX(-10deg) scale(1.08);
+
+    /* 减轻阴影成本 */
+    filter: drop-shadow(0 6px 12px rgba(95, 246, 255, 0.35));
+}
+
+/* ===== 导航 ===== */
 .nav-icons {
     display: flex;
     gap: 20px;
     align-items: center;
 }
+
 .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
+
     cursor: pointer;
     opacity: 0.7;
-    transition: opacity 0.3s, transform 0.2s, text-shadow 0.2s;
+
+    transition: transform 0.2s, opacity 0.2s;
 }
+
 .nav-item:hover {
     opacity: 1;
     transform: translateY(-2px);
-    text-shadow: 0 0 8px #5ff6ff, 0 0 16px #5ff6ff;
-}
-.nav-item .icon {
-    font-size: 18px;
-}
-.nav-item p {
-    margin: 2px 0 0;
-    font-size: 10px;
 }
 
-/* 探索者模式开关 */
+/* ===== 开关 ===== */
 .explorer-toggle {
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
 }
+
 .toggle-switch {
     width: 44px;
     height: 22px;
+
     background: rgba(255,255,255,0.2);
     border-radius: 20px;
+
     position: relative;
     transition: background 0.3s;
 }
+
 .toggle-dot {
     width: 16px;
     height: 16px;
     background: white;
+
     border-radius: 50%;
     position: absolute;
+
     top: 3px;
     left: 3px;
-    transition: left 0.3s;
-}
-body.machine-mode .toggle-switch {
-    background: #5ff6ff;
-}
-body.machine-mode .toggle-dot {
-    left: 25px;
+
+    transition: transform 0.3s;
 }
 
-/* 英雄区标题 */
+/* 模式切换（更流畅） */
+body.machine-mode .toggle-switch {
+    background: var(--primary);
+}
+
+body.machine-mode .toggle-dot {
+    transform: translateX(22px);
+}
+
+/* ===== Hero ===== */
 .hero {
     height: 100vh;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    position: relative;
+    z-index: 1;
 }
+
 .hero h1 {
     font-size: clamp(2.5rem, 8vw, 4.5rem);
     margin: 0;
-    background: linear-gradient(90deg, #fff, #5ff6ff);
+
+    background: linear-gradient(90deg, #fff, var(--primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-/* 能量环动画 */
+/* ===== 能量核心（优化版）===== */
 .energy-core {
     position: absolute;
-    width: 300px;
-    height: 300px;
+
+    width: 260px;
+    height: 260px;
+
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(95,246,255,0.15), transparent 70%);
-    filter: blur(40px);
+
+    background: radial-gradient(circle, rgba(95,246,255,0.12), transparent 70%);
+
+    /* 降低 blur 开销 */
+    filter: blur(25px);
+
     animation: pulse 4s infinite ease-in-out;
-    z-index: -2;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-@keyframes pulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
-    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; }
+
+    z-index: 0;
 }
 
-/* 节点信息面板 */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.25);
+        opacity: 0.6;
+    }
+}
+
+/* ===== 面板 ===== */
 #node-panel {
     position: fixed;
     bottom: 30px;
     right: 30px;
+
     width: 260px;
-    background: rgba(10, 15, 30, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid #5ff6ff;
+
+    background: rgba(10, 15, 30, 0.85);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    border: 1px solid var(--primary);
     border-radius: 15px;
+
     padding: 20px;
+
     display: none;
-    z-index: 100;
+    z-index: 20;
 }
+
 #node-panel button {
     width: 100%;
     padding: 8px;
-    background: #5ff6ff;
+
+    background: var(--primary);
     border: none;
+
     cursor: pointer;
     margin-top: 10px;
+
     font-weight: bold;
-    transition: background 0.2s;
-}
-#node-panel button:hover {
-    background: #9ff9ff;
+
+    transition: transform 0.15s, opacity 0.15s;
 }
 
+#node-panel button:hover {
+    transform: scale(1.03);
+    opacity: 0.9;
+}
+
+/* ===== 响应式 ===== */
 @media (max-width: 768px) {
-    .logo-text, .toggle-label, .nav-item p {
+    .logo-text,
+    .nav-item p {
         display: none;
     }
-}
 
-/* ==========================================================
-   2.5D 动态增强：仅通过 CSS 提升立体感，不改变图片本身
-   ========================================================== */
-
-/* 1. 给 Logo 容器加上 3D 景深 */
-.logo {
-    perspective: 800px;
-    transition: transform 0.3s ease-out;
-}
-
-/* 2. 整个盒子悬浮时的轻微上浮感 */
-.logo:hover {
-    transform: translateY(-2px);
-}
-
-/* 3. 让原版图片支持 3D 旋转并平滑过渡 */
-.logo-img {
-    height: 30px;
-    transform-style: preserve-3d;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease !important;
-}
-
-/* 4. 重点：当鼠标放到文字或图片上时，图片本身产生的 2.5D 倾斜和增强的发光阴影 */
-.logo:hover .logo-img {
-    /* 沿着 X 轴和 Y 轴小幅度立体翻转 */
-    transform: rotateY(15deg) rotateX(-10deg) scale(1.08);
-    /* 增强你原有的 #5ff6ff 青色科幻阴影，模拟立体悬浮后的环境光反射 */
-    filter: drop-shadow(-4px 8px 10px rgba(95, 246, 255, 0.45)) !important;
+    .global-nav {
+        backdrop-filter: none; /* 移动端降级 */
+    }
 }
