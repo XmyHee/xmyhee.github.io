@@ -2,92 +2,63 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestFrontiers</title>
 
-    <title>QuestFrontiers | 求索映界</title>
-
-    <!-- 字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
-    <!-- 样式 -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Three.js -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 </head>
 
 <body>
 
-<!-- ================= 导航栏（修复） ================= -->
-<div class="global-nav">
-    <div class="nav-inner">
+<!-- ================= NAV ================= -->
+<header class="nav">
+    <div class="nav__inner">
 
         <!-- Logo -->
         <div class="logo" onclick="scrollToTop()">
-            <img 
-                src="logo.png"
-                class="logo-img"
-                alt="logo"
-                decoding="async"
-                fetchpriority="high"
-            >
-            <span class="logo-text">QuestFrontiers | 求索映界</span>
+            <img src="logo.png" class="logo__img" alt="logo">
+            <span class="logo__text">QuestFrontiers</span>
         </div>
 
-        <!-- 导航 -->
-        <div class="nav-icons">
-            <div class="nav-item">
-                <div class="icon">◎</div>
-                <p>前沿疆域</p>
-            </div>
+        <!-- Navigation -->
+        <nav class="nav__menu">
+            <div class="nav__item">◎ 前沿疆域</div>
+            <div class="nav__item">◉ 映照引擎</div>
+            <div class="nav__item">⬡ 解决方案</div>
+        </nav>
 
-            <div class="nav-item">
-                <div class="icon">◉</div>
-                <p>映照引擎</p>
-            </div>
-
-            <div class="nav-item">
-                <div class="icon">⬡</div>
-                <p>解决方案</p>
-            </div>
-        </div>
-
-        <!-- 探索者模式 -->
-        <div class="explorer-toggle" onclick="toggleExplorerMode()">
-            <span class="toggle-label">探索者模式</span>
-            <div class="toggle-switch">
-                <div class="toggle-dot"></div>
+        <!-- Toggle -->
+        <div class="toggle" onclick="toggleExplorerMode()">
+            <span class="toggle__label">探索者模式</span>
+            <div class="toggle__switch">
+                <div class="toggle__dot"></div>
             </div>
         </div>
 
     </div>
-</div>
+</header>
 
-<!-- ================= 3D 背景 ================= -->
+<!-- ================= 3D ================= -->
 <div id="three-container"></div>
 
-<!-- ================= Hero ================= -->
+<!-- ================= HERO ================= -->
 <section class="hero">
+    <div class="hero__core"></div>
 
-    <div class="energy-core"></div>
-
-    <div class="hero-center">
-        <h1>QuestFrontiers</h1>
-        <p>探索智能 · 映照万象</p>
+    <div class="hero__center">
+        <h1 class="hero__title">QuestFrontiers</h1>
+        <p class="hero__subtitle">探索智能 · 映照万象</p>
     </div>
-
 </section>
 
-<!-- ================= 节点信息面板 ================= -->
-<div id="node-panel">
+<!-- ================= PANEL ================= -->
+<aside class="panel" id="node-panel">
     <h3 id="node-title">AI Node</h3>
     <p id="node-desc">系统就绪</p>
     <button onclick="closePanel()">关闭</button>
-</div>
+</aside>
 
-<!-- ================= JS ================= -->
 <script src="script.js"></script>
-
 </body>
 </html>
