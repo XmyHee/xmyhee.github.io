@@ -1,60 +1,44 @@
-/* ===== 基础 ===== */
+/* ===== 变量 ===== */
 :root {
     --primary: #5ff6ff;
     --bg: #05070f;
-    --glass: rgba(10, 15, 35, 0.4);
 }
 
+/* ===== 基础 ===== */
 body {
     margin: 0;
     background: var(--bg);
     color: white;
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-
-    /* 允许滚动，但隐藏横向 */
-    overflow-x: hidden;
-
-    /* 提升触控响应 */
-    touch-action: manipulation;
+    font-family: system-ui;
 }
 
-/* ===== 3D 背景层 ===== */
+/* ===== 3D ===== */
 #three-container {
     position: fixed;
     inset: 0;
     z-index: 0;
-
-    /* GPU优化 */
-    will-change: transform;
 }
 
-/* ===== 导航栏 ===== */
-.global-nav {
+/* ===== NAV ===== */
+.nav {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-
     width: 90%;
-    max-width: 1300px;
-
-    background: var(--glass);
-
-    /* 降级兼容 */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.08);
-
+    max-width: 1200px;
     z-index: 10;
+
+    background: rgba(10,15,35,0.4);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
 }
 
-.nav-inner {
+.nav__inner {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 12px 25px;
+    align-items: center;
+    padding: 12px 20px;
 }
 
 /* ===== Logo ===== */
@@ -63,196 +47,86 @@ body {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-
-    perspective: 800px;
 }
 
-.logo-img {
+.logo__img {
     height: 30px;
-
-    transform-style: preserve-3d;
-
-    transition:
-        transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        filter 0.3s;
-
-    /* GPU加速 */
-    will-change: transform;
+    transition: transform 0.3s;
 }
 
-.logo:hover .logo-img {
-    transform: rotateY(15deg) rotateX(-10deg) scale(1.08);
-
-    /* 减轻阴影成本 */
-    filter: drop-shadow(0 6px 12px rgba(95, 246, 255, 0.35));
+.logo:hover .logo__img {
+    transform: scale(1.1) rotateY(10deg);
 }
 
-/* ===== 导航 ===== */
-.nav-icons {
+/* ===== Nav Menu ===== */
+.nav__menu {
     display: flex;
     gap: 20px;
-    align-items: center;
 }
 
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    cursor: pointer;
+.nav__item {
     opacity: 0.7;
-
-    transition: transform 0.2s, opacity 0.2s;
+    cursor: pointer;
 }
 
-.nav-item:hover {
+.nav__item:hover {
     opacity: 1;
-    transform: translateY(-2px);
 }
 
-/* ===== 开关 ===== */
-.explorer-toggle {
+/* ===== Toggle ===== */
+.toggle {
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
 }
 
-.toggle-switch {
-    width: 44px;
-    height: 22px;
-
-    background: rgba(255,255,255,0.2);
+.toggle__switch {
+    width: 40px;
+    height: 20px;
+    background: #aaa;
     border-radius: 20px;
-
     position: relative;
-    transition: background 0.3s;
 }
 
-.toggle-dot {
-    width: 16px;
-    height: 16px;
+.toggle__dot {
+    width: 14px;
+    height: 14px;
     background: white;
-
     border-radius: 50%;
     position: absolute;
-
     top: 3px;
     left: 3px;
-
     transition: transform 0.3s;
 }
 
-/* 模式切换（更流畅） */
-body.machine-mode .toggle-switch {
-    background: var(--primary);
+body.machine-mode .toggle__dot {
+    transform: translateX(20px);
 }
 
-body.machine-mode .toggle-dot {
-    transform: translateX(22px);
+body.machine-mode {
+    --primary: #ff00ff;
 }
 
-/* ===== Hero ===== */
+/* ===== HERO ===== */
 .hero {
     height: 100vh;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-    position: relative;
-    z-index: 1;
 }
 
-.hero h1 {
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
-    margin: 0;
-
-    background: linear-gradient(90deg, #fff, var(--primary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.hero__title {
+    font-size: 4rem;
 }
 
-/* ===== 能量核心（优化版）===== */
-.energy-core {
-    position: absolute;
-
-    width: 260px;
-    height: 260px;
-
-    border-radius: 50%;
-
-    background: radial-gradient(circle, rgba(95,246,255,0.12), transparent 70%);
-
-    /* 降低 blur 开销 */
-    filter: blur(25px);
-
-    animation: pulse 4s infinite ease-in-out;
-
-    z-index: 0;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 0.3;
-    }
-    50% {
-        transform: scale(1.25);
-        opacity: 0.6;
-    }
-}
-
-/* ===== 面板 ===== */
-#node-panel {
+/* ===== PANEL ===== */
+.panel {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-
-    width: 260px;
-
-    background: rgba(10, 15, 30, 0.85);
-
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-
-    border: 1px solid var(--primary);
-    border-radius: 15px;
-
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.7);
     padding: 20px;
-
+    border-radius: 10px;
     display: none;
-    z-index: 20;
-}
-
-#node-panel button {
-    width: 100%;
-    padding: 8px;
-
-    background: var(--primary);
-    border: none;
-
-    cursor: pointer;
-    margin-top: 10px;
-
-    font-weight: bold;
-
-    transition: transform 0.15s, opacity 0.15s;
-}
-
-#node-panel button:hover {
-    transform: scale(1.03);
-    opacity: 0.9;
-}
-
-/* ===== 响应式 ===== */
-@media (max-width: 768px) {
-    .logo-text,
-    .nav-item p {
-        display: none;
-    }
-
-    .global-nav {
-        backdrop-filter: none; /* 移动端降级 */
-    }
 }
