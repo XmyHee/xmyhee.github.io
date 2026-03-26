@@ -180,3 +180,33 @@ body.machine-mode .toggle-dot {
         display: none;
     }
 }
+
+/* ==========================================================
+   2.5D 动态增强：仅通过 CSS 提升立体感，不改变图片本身
+   ========================================================== */
+
+/* 1. 给 Logo 容器加上 3D 景深 */
+.logo {
+    perspective: 800px;
+    transition: transform 0.3s ease-out;
+}
+
+/* 2. 整个盒子悬浮时的轻微上浮感 */
+.logo:hover {
+    transform: translateY(-2px);
+}
+
+/* 3. 让原版图片支持 3D 旋转并平滑过渡 */
+.logo-img {
+    height: 30px;
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease !important;
+}
+
+/* 4. 重点：当鼠标放到文字或图片上时，图片本身产生的 2.5D 倾斜和增强的发光阴影 */
+.logo:hover .logo-img {
+    /* 沿着 X 轴和 Y 轴小幅度立体翻转 */
+    transform: rotateY(15deg) rotateX(-10deg) scale(1.08);
+    /* 增强你原有的 #5ff6ff 青色科幻阴影，模拟立体悬浮后的环境光反射 */
+    filter: drop-shadow(-4px 8px 10px rgba(95, 246, 255, 0.45)) !important;
+}
