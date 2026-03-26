@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
 
-    <!-- 视口 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>QuestFrontiers | 求索映界</title>
@@ -20,17 +19,22 @@
 
 <body>
 
-<!-- ================= 导航栏 ================= -->
-<div class="logo" onclick="scrollToTop()">
-    <img 
-        src="logo.png"
-        class="logo-img"
-        alt="logo"
-        decoding="async"
-        fetchpriority="high"
-    >
-    <span class="logo-text">QuestFrontiers | 求索映界</span>
-</div>
+<!-- ================= 导航栏（修复） ================= -->
+<div class="global-nav">
+    <div class="nav-inner">
+
+        <!-- Logo -->
+        <div class="logo" onclick="scrollToTop()">
+            <img 
+                src="logo.png"
+                class="logo-img"
+                alt="logo"
+                decoding="async"
+                fetchpriority="high"
+            >
+            <span class="logo-text">QuestFrontiers | 求索映界</span>
+        </div>
+
         <!-- 导航 -->
         <div class="nav-icons">
             <div class="nav-item">
@@ -66,10 +70,8 @@
 <!-- ================= Hero ================= -->
 <section class="hero">
 
-    <!-- 能量核心 -->
     <div class="energy-core"></div>
 
-    <!-- 标题 -->
     <div class="hero-center">
         <h1>QuestFrontiers</h1>
         <p>探索智能 · 映照万象</p>
