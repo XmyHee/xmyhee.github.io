@@ -2,29 +2,24 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>QuestFrontiers</title>
 
-    <!-- ✅ 关键资源预加载 -->
-    <link rel="preload" href="logo.png" as="image">
+    <link rel="preload" href="Gemini_001.jpeg" as="image">
+    <link rel="icon" href="Gemini_001.jpeg" type="image/jpeg">
 
-    <!-- 样式 -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- ✅ Three.js 不阻塞 -->
     <script defer src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 </head>
 
 <body>
 
-<!-- NAV -->
 <header class="nav">
     <div class="nav__inner">
 
         <div class="logo" onclick="scrollToTop()">
-            <img src="Gemini_001.jpeg" class="Gemini_001.jpeg" alt="logo" decoding="async">
+            <img src="Gemini_001.jpeg" class="logo__img" alt="QuestFrontiers Logo" decoding="async">
             <span class="logo__text">QuestFrontiers</span>
         </div>
 
@@ -44,10 +39,8 @@
     </div>
 </header>
 
-<!-- 3D -->
 <div id="three-container"></div>
 
-<!-- HERO -->
 <section class="hero">
     <div class="hero__core"></div>
 
@@ -57,7 +50,6 @@
     </div>
 </section>
 
-<!-- PANEL -->
 <aside class="panel" id="node-panel">
     <h3 id="node-title">AI Node</h3>
     <p id="node-desc">系统就绪</p>
