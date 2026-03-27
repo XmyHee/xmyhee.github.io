@@ -1,10 +1,15 @@
 /**
  * QuestFrontiers 核心交互脚本
- * 优化项：窗口自适应、鼠标交互反馈、模式深度联动
+ * 优化项：窗口自适应、鼠标交互反馈、模式深度联动、✅ 粒子系统
  */
 
 let scene, camera, renderer, core, light;
+let particles; // ✅ 粒子系统变量
 let isMachineMode = false;
+
+// 鼠标交互变量
+let targetX = 0, targetY = 0;
+let mouseX = 0, mouseY = 0;
 
 // ===== 页面加载启动 =====
 window.addEventListener("DOMContentLoaded", () => {
@@ -34,59 +39,108 @@ function init3D() {
     renderer = new THREE.WebGLRenderer({ 
         alpha: true, 
         antialias: true,
-        powerPreference: "high-performance" // 强制开启高性能模式
+        powerPreference: "high-performance"
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // 限制像素比，提升移动端性能
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
-    // 3. 创建几何核心 (增加细节分段使球体更圆润)
+    // 3. 创建几何核心
     const geometry = new THREE.IcosahedronGeometry(4, 2);
     const material = new THREE.MeshPhongMaterial({ 
         wireframe: true, 
         color: 0x5ff6ff,
         transparent: true,
-        opacity: 0.8
+        opacity: 0.7
     });
     core = new THREE.Mesh(geometry, material);
     scene.add(core);
 
-    // 4. 光源
-    light = new THREE.PointLight(0x5ff6ff, 1);
-    light.position.set(10, 10, 10);
+    // 4. ✅ 初始化漂浮粒子
+    initParticles();
+
+    // 5. 光源
+    light = new THREE.PointLight(0x5ff6ff, 1.2);
+    light.position.set(15, 15, 15);
     scene.add(light);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.2)); // 增加环境光增强质感
+    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
-    // 5. 鼠标交互变量
-    let targetX = 0, targetY = 0;
-    let mouseX = 0, mouseY = 0;
-
+    // 6. 鼠标移动监听
     window.addEventListener("mousemove", (e) => {
-        // 将鼠标坐标归一化到 -1 到 1
         mouseX = (e.clientX / window.innerWidth) * 2 - 1;
         mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
     });
 
-    // 6. 动画循环
+    // 7. 动画循环
     function animate() {
         requestAnimationFrame(animate);
 
-        // 基础旋转
-        const speed = isMachineMode ? 0.015 : 0.005;
-        core.rotation.x += speed;
-        core.rotation.y += speed;
+        const baseSpeed = 0.003;
+        const modeMultiplier = isMachineMode ? 4 : 1;
+        
+        // 核心旋转
+        if (core) {
+            core.rotation.x += baseSpeed * modeMultiplier;
+            core.rotation.y += baseSpeed * 1.5 * modeMultiplier;
+        }
 
-        // 鼠标平滑追踪 (让核心随鼠标轻微摆动)
+        // ✅ 粒子漂浮动画
+        if (particles) {
+            // 让粒子整体缓慢旋转
+            particles.rotation.y += 0.0005 * modeMultiplier;
+            particles.rotation.x += 0.0002;
+            
+            // 粒子随鼠标轻微摆动 (增加景深感)
+            particles.position.x += (mouseX * 0.5 - particles.position.x) * 0.02;
+            particles.position.y += (mouseY * 0.3 - particles.position.y) * 0.02;
+        }
+
+        // 核心鼠标平滑追踪
         targetX += (mouseX - targetX) * 0.05;
         targetY += (mouseY - targetY) * 0.05;
-        core.rotation.z = targetX * 0.5;
-        core.position.x = targetX * 2;
-        core.position.y = targetY * 1;
+        
+        if (core) {
+            core.rotation.z = targetX * 0.3;
+            core.position.x = targetX * 2;
+            core.position.y = targetY * 1;
+        }
 
         renderer.render(scene, camera);
     }
 
     animate();
+}
+
+/**
+ * ✅ 3. 初始化漂浮粒子系统
+ */
+function initParticles() {
+    const particleCount = 2500; // 粒子数量
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3); // 每个粒子 XYZ 三个坐标
+
+    // 在指定范围内随机分布粒子
+    for (let i = 0; i < particleCount * 3; i += 3) {
+        positions[i] = (Math.random() - 0.5) * 60;     // X
+        positions[i + 1] = (Math.random() - 0.5) * 60; // Y
+        positions[i + 2] = (Math.random() - 0.5) * 40; // Z
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    // 粒子材质 (使用 PointsMaterial)
+    const material = new THREE.PointsMaterial({
+        color: 0x5ff6ff,
+        size: 0.12,          // 粒子大小
+        transparent: true,
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending, // 叠加增强亮度
+        depthWrite: false,   // 防止粒子遮挡粒子
+        sizeAttenuation: true // 随距离衰减
+    });
+
+    particles = new THREE.Points(geometry, material);
+    scene.add(particles);
 }
 
 // ===== 响应式窗口缩放 =====
@@ -103,41 +157,37 @@ function initResizeListener() {
 
 // ===== UI 功能联动 =====
 
-/**
- * 切换探索者模式
- */
 function toggleExplorerMode() {
     isMachineMode = !isMachineMode;
     document.body.classList.toggle("machine-mode");
 
-    // 联动 3D 材质颜色切换
-    if (core && light) {
+    // 联动 3D 材质和粒子颜色切换
+    if (core && light && particles) {
         const newColor = isMachineMode ? 0xff00ff : 0x5ff6ff;
-        core.material.color.setHex(newColor);
-        light.color.setHex(newColor);
         
-        // 模式切换时的冲击感动画
-        core.scale.set(1.5, 1.5, 1.5);
+        // 核心颜色
+        core.material.color.setHex(newColor);
+        // 光源颜色
+        light.color.setHex(newColor);
+        // ✅ 粒子颜色同步切换
+        particles.material.color.setHex(newColor);
+        
+        // 冲击感动画
+        core.scale.set(1.4, 1.4, 1.4);
         setTimeout(() => core.scale.set(1, 1, 1), 200);
     }
 }
 
-/**
- * 滚动到顶部
- */
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-/**
- * 控制面板
- */
 function closePanel() {
     const panel = document.getElementById("node-panel");
     if (panel) panel.style.display = "none";
 }
 
-// 导出到全局环境
+// 导出到全局
 window.toggleExplorerMode = toggleExplorerMode;
 window.closePanel = closePanel;
 window.scrollToTop = scrollToTop;
