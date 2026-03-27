@@ -1,58 +1,79 @@
 :root {
     --primary: #5ff6ff;
     --bg: #05070f;
+    --nav-bg: rgba(10, 15, 35, 0.4);
+    --transition-speed: 0.3s;
 }
 
-/* 基础 */
+/* --- 基础重置与优化 --- */
+* {
+    box-sizing: border-box; /* 确保内边距不会撑破容器 */
+}
+
 body {
     margin: 0;
-    background: var(--bg);
-    color: white;
-    font-family: system-ui;
+    background-color: var(--bg);
+    color: #ffffff;
+    font-family: system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased; /* 让字体边缘更平滑 */
+    transition: background-color var(--transition-speed) ease;
 }
 
-/* 3D层 */
+body.machine-mode {
+    --primary: #ff00ff;
+}
+
+/* --- 3D 背景层 --- */
 #three-container {
     position: fixed;
     inset: 0;
     z-index: 0;
+    pointer-events: none; /* 穿透点击，避免阻挡鼠标事件，极大提升滚动性能 */
 }
 
-/* NAV */
+/* --- 导航栏 (NAV) --- */
 .nav {
     position: fixed;
     top: 20px;
     left: 50%;
-    transform: translateX(-50%);
+    /* 增加 translateZ(0) 强制开启 GPU 硬件加速 */
+    transform: translateX(-50%) translateZ(0); 
     width: 90%;
     max-width: 1200px;
     z-index: 10;
-
-    background: rgba(10,15,35,0.4);
+    
+    background: var(--nav-bg);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
     border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 增加玻璃拟态边缘质感 */
+    will-change: transform; /* 预告浏览器优化渲染 */
 }
 
 .nav__inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
+    padding: 12px 24px;
 }
 
-/* LOGO */
+/* --- LOGO --- */
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     cursor: pointer;
 }
 
 .logo__img {
-    height: 30px;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%; /* 如果图片是方的，裁成圆的更现代 */
+    object-fit: cover;
     opacity: 0;
-    transition: opacity 0.4s ease, transform 0.3s;
+    /* 使用 cubic-bezier 让回弹更自然 */
+    transition: opacity 0.4s ease, transform var(--transition-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .logo__img[src] {
@@ -60,95 +81,169 @@ body {
 }
 
 .logo:hover .logo__img {
-    transform: scale(1.1);
+    transform: scale(1.15) translateZ(0);
 }
 
-/* NAV ITEM */
+/* --- 导航菜单 --- */
 .nav__menu {
     display: flex;
-    gap: 20px;
+    gap: 30px;
 }
 
 .nav__item {
-    opacity: 0.7;
+    opacity: 0.6;
     cursor: pointer;
+    font-weight: 500;
+    transition: opacity var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
 .nav__item:hover {
     opacity: 1;
+    color: var(--primary);
 }
 
-/* TOGGLE */
+/* --- 开关 (TOGGLE) --- */
 .toggle {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     cursor: pointer;
+    user-select: none; /* 防止快速点击时误选中文字 */
+}
+
+.toggle__label {
+    font-size: 0.9rem;
+    opacity: 0.8;
 }
 
 .toggle__switch {
-    width: 40px;
-    height: 20px;
-    background: #aaa;
+    width: 44px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     position: relative;
+    transition: background var(--transition-speed) ease;
 }
 
 .toggle__dot {
-    width: 14px;
-    height: 14px;
-    background: white;
+    width: 18px;
+    height: 18px;
+    background: #ffffff;
     border-radius: 50%;
     position: absolute;
     top: 3px;
     left: 3px;
-    transition: transform 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    /* 缓动函数让球的滑动更有物理感 */
+    transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+/* 探索者模式开启后的样式 */
+body.machine-mode .toggle__switch {
+    background: var(--primary);
 }
 
 body.machine-mode .toggle__dot {
     transform: translateX(20px);
 }
 
-body.machine-mode {
-    --primary: #ff00ff;
-}
-
-/* HERO */
+/* --- 主视觉 (HERO) --- */
 .hero {
+    position: relative;
+    z-index: 1; /* 确保文字层在 3D 背景层（z-index: 0）之上 */
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+}
+
+.hero__center {
+    position: relative;
+    z-index: 2;
 }
 
 .hero__title {
-    font-size: 4rem;
+    font-size: clamp(3rem, 6vw, 5rem); /* 响应式字体：随屏幕变小而变小 */
+    margin: 0 0 10px 0;
+    letter-spacing: -1px;
 }
 
-/* 渐变稳定 */
+.hero__subtitle {
+    font-size: 1.2rem;
+    opacity: 0.8;
+    letter-spacing: 2px;
+}
+
+/* 渐变文字 */
 .gradient-text {
-    background: linear-gradient(90deg, #fff, var(--primary));
+    background: linear-gradient(90deg, #ffffff, var(--primary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    will-change: transform;
+    background-clip: text;
+    transition: background var(--transition-speed) ease;
+    /* 移除了无用的 will-change: transform，减少显存占用 */
 }
 
 /* 能量核心 */
 .hero__core {
     position: absolute;
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, rgba(95,246,255,0.2), transparent);
-    filter: blur(30px);
+    width: 350px;
+    height: 350px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    /* ❌ 极度消耗性能的 filter: blur 已被移除 */
+    /* ✅ 改用边缘羽化的径向渐变，效果相同但 0 渲染负担 */
+    background: radial-gradient(circle, rgba(95,246,255,0.15) 0%, rgba(95,246,255,0) 70%);
+    transition: background var(--transition-speed) ease;
 }
 
-/* PANEL */
+body.machine-mode .hero__core {
+    background: radial-gradient(circle, rgba(255,0,255,0.15) 0%, rgba(255,0,255,0) 70%);
+}
+
+/* --- 提示面板 (PANEL) --- */
 .panel {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: rgba(0,0,0,0.7);
-    padding: 20px;
-    border-radius: 10px;
+    z-index: 20;
+    
+    background: rgba(10, 15, 35, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     display: none;
+}
+
+.panel h3 {
+    margin: 0 0 10px 0;
+    color: var(--primary);
+}
+
+.panel p {
+    margin: 0 0 20px 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.panel button {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.panel button:hover {
+    background: var(--primary);
+    color: #000;
+    border-color: var(--primary);
 }
