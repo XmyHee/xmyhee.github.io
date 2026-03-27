@@ -2,33 +2,38 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>QuestFrontiers</title>
 
+    <!-- ✅ 关键资源预加载 -->
+    <link rel="preload" href="logo.png" as="image">
+
+    <!-- 样式 -->
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+
+    <!-- ✅ Three.js 不阻塞 -->
+    <script defer src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 </head>
 
 <body>
 
-<!-- ================= NAV ================= -->
+<!-- NAV -->
 <header class="nav">
     <div class="nav__inner">
 
-        <!-- Logo -->
         <div class="logo" onclick="scrollToTop()">
-            <img src="logo.png" class="logo__img" alt="logo">
+            <img src="logo.png" class="logo__img" alt="logo" decoding="async">
             <span class="logo__text">QuestFrontiers</span>
         </div>
 
-        <!-- Navigation -->
         <nav class="nav__menu">
             <div class="nav__item">◎ 前沿疆域</div>
             <div class="nav__item">◉ 映照引擎</div>
             <div class="nav__item">⬡ 解决方案</div>
         </nav>
 
-        <!-- Toggle -->
         <div class="toggle" onclick="toggleExplorerMode()">
             <span class="toggle__label">探索者模式</span>
             <div class="toggle__switch">
@@ -39,26 +44,27 @@
     </div>
 </header>
 
-<!-- ================= 3D ================= -->
+<!-- 3D -->
 <div id="three-container"></div>
 
-<!-- ================= HERO ================= -->
+<!-- HERO -->
 <section class="hero">
     <div class="hero__core"></div>
 
     <div class="hero__center">
-        <h1 class="hero__title">QuestFrontiers</h1>
+        <h1 class="hero__title gradient-text">QuestFrontiers</h1>
         <p class="hero__subtitle">探索智能 · 映照万象</p>
     </div>
 </section>
 
-<!-- ================= PANEL ================= -->
+<!-- PANEL -->
 <aside class="panel" id="node-panel">
     <h3 id="node-title">AI Node</h3>
     <p id="node-desc">系统就绪</p>
     <button onclick="closePanel()">关闭</button>
 </aside>
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
+
 </body>
 </html>
