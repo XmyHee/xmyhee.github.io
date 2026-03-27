@@ -5,9 +5,9 @@
     --transition-speed: 0.3s;
 }
 
-/* --- 基础重置与优化 --- */
+/* --- 基础重置 --- */
 * {
-    box-sizing: border-box; /* 确保内边距不会撑破容器 */
+    box-sizing: border-box;
 }
 
 body {
@@ -16,7 +16,7 @@ body {
     color: #ffffff;
     font-family: system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased; /* 让字体边缘更平滑 */
+    -webkit-font-smoothing: antialiased;
     transition: background-color var(--transition-speed) ease;
 }
 
@@ -29,15 +29,14 @@ body.machine-mode {
     position: fixed;
     inset: 0;
     z-index: 0;
-    pointer-events: none; /* 穿透点击，避免阻挡鼠标事件，极大提升滚动性能 */
+    pointer-events: none;
 }
 
-/* --- 导航栏 (NAV) --- */
+/* --- 导航栏 --- */
 .nav {
     position: fixed;
     top: 20px;
     left: 50%;
-    /* 增加 translateZ(0) 强制开启 GPU 硬件加速 */
     transform: translateX(-50%) translateZ(0); 
     width: 90%;
     max-width: 1200px;
@@ -45,43 +44,65 @@ body.machine-mode {
     
     background: var(--nav-bg);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1); /* 增加玻璃拟态边缘质感 */
-    will-change: transform; /* 预告浏览器优化渲染 */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    will-change: transform;
 }
 
 .nav__inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 24px;
+    padding: 10px 24px; /* 稍微减少内边距以适配原比例 Logo */
 }
 
-/* --- LOGO --- */
+/* --- LOGO 立体感优化 --- */
 .logo {
     display: flex;
     align-items: center;
     gap: 12px;
     cursor: pointer;
+    /* 为子元素的透视动画准备 */
+    perspective: 1000px; 
 }
 
 .logo__img {
-    height: 32px;
-    width: 32px;
-    border-radius: 50%; /* 如果图片是方的，裁成圆的更现代 */
-    object-fit: cover;
+    /* ✅ 2. 原比例展示：不强制宽高，只限制最大高度 */
+    height: auto;
+    width: auto;
+    max-height: 36px; /* 限制高度以适配导航栏 */
+    
+    /* ✅ 1. 立体感：精细的内阴影 + 外部微光 */
+    border-radius: 8px; /* 稍微裁切边缘 */
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.2), /* 上部内高光 */
+        inset 0 -2px 4px rgba(0, 0, 0, 0.4),    /* 下部内阴影 */
+        0 4px 8px rgba(0, 0, 0, 0.3),         /* 外部软阴影 */
+        0 0 10px rgba(95, 246, 255, 0.1);      /* 外部极弱氛围光 */
+    
+    object-fit: contain;
     opacity: 0;
-    /* 使用 cubic-bezier 让回弹更自然 */
-    transition: opacity 0.4s ease, transform var(--transition-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    /* 增加 3D 旋转过渡 */
+    transition: 
+        opacity 0.4s ease, 
+        transform var(--transition-speed) cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow var(--transition-speed) ease;
 }
 
 .logo__img[src] {
     opacity: 1;
 }
 
+/* 悬停时的立体旋转反馈 */
 .logo:hover .logo__img {
-    transform: scale(1.15) translateZ(0);
+    transform: scale(1.05) rotateX(10deg) rotateY(-5deg) translateZ(5px);
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.3),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(95, 246, 255, 0.2);
 }
 
 /* --- 导航菜单 --- */
@@ -94,6 +115,7 @@ body.machine-mode {
     opacity: 0.6;
     cursor: pointer;
     font-weight: 500;
+    font-size: 0.95rem;
     transition: opacity var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
@@ -102,55 +124,53 @@ body.machine-mode {
     color: var(--primary);
 }
 
-/* --- 开关 (TOGGLE) --- */
+/* --- 开关 --- */
 .toggle {
     display: flex;
     align-items: center;
     gap: 12px;
     cursor: pointer;
-    user-select: none; /* 防止快速点击时误选中文字 */
+    user-select: none;
 }
 
 .toggle__label {
-    font-size: 0.9rem;
-    opacity: 0.8;
+    font-size: 0.85rem;
+    opacity: 0.7;
 }
 
 .toggle__switch {
-    width: 44px;
-    height: 24px;
-    background: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 20px;
     position: relative;
     transition: background var(--transition-speed) ease;
 }
 
 .toggle__dot {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     background: #ffffff;
     border-radius: 50%;
     position: absolute;
     top: 3px;
     left: 3px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    /* 缓动函数让球的滑动更有物理感 */
     transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1); 
 }
 
-/* 探索者模式开启后的样式 */
 body.machine-mode .toggle__switch {
     background: var(--primary);
 }
 
 body.machine-mode .toggle__dot {
-    transform: translateX(20px);
+    transform: translateX(18px);
 }
 
-/* --- 主视觉 (HERO) --- */
+/* --- ✅ 2. 主视觉排边优化 --- */
 .hero {
     position: relative;
-    z-index: 1; /* 确保文字层在 3D 背景层（z-index: 0）之上 */
+    z-index: 1;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -161,89 +181,74 @@ body.machine-mode .toggle__dot {
 .hero__center {
     position: relative;
     z-index: 2;
+    /* ✅ 使用 Flex 垂直排列 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0px; /* 标题和口号的间距 */
 }
 
 .hero__title {
-    font-size: clamp(3rem, 6vw, 5rem); /* 响应式字体：随屏幕变小而变小 */
-    margin: 0 0 10px 0;
-    letter-spacing: -1px;
+    font-size: clamp(3rem, 7vw, 6rem); /* 稍微放大标题 */
+    margin: 0;
+    letter-spacing: -2px;
+    line-height: 1;
 }
 
 .hero__subtitle {
-    font-size: 1.2rem;
-    opacity: 0.8;
-    letter-spacing: 2px;
+    /* ✅ 移除 absolute 布局 */
+    position: relative; 
+    top: auto;
+    left: auto;
+    transform: none;
+
+    font-size: clamp(1rem, 2vw, 1.4rem); /* 响应式字号 */
+    opacity: 0.7;
+    letter-spacing: 4px; /* 增加字间距营造空灵感 */
+    margin-top: 15px; /* 与标题的精确间距 */
+    font-weight: 300;
 }
 
 /* 渐变文字 */
 .gradient-text {
-    background: linear-gradient(90deg, #ffffff, var(--primary));
+    background: linear-gradient(90deg, #ffffff 30%, var(--primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     transition: background var(--transition-speed) ease;
-    /* 移除了无用的 will-change: transform，减少显存占用 */
 }
 
 /* 能量核心 */
 .hero__core {
     position: absolute;
-    width: 350px;
-    height: 350px;
+    width: 400px;
+    height: 400px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    /* ❌ 极度消耗性能的 filter: blur 已被移除 */
-    /* ✅ 改用边缘羽化的径向渐变，效果相同但 0 渲染负担 */
-    background: radial-gradient(circle, rgba(95,246,255,0.15) 0%, rgba(95,246,255,0) 70%);
+    background: radial-gradient(circle, rgba(95,246,255,0.12) 0%, rgba(95,246,255,0) 70%);
     transition: background var(--transition-speed) ease;
 }
 
 body.machine-mode .hero__core {
-    background: radial-gradient(circle, rgba(255,0,255,0.15) 0%, rgba(255,0,255,0) 70%);
+    background: radial-gradient(circle, rgba(255,0,255,0.12) 0%, rgba(255,0,255,0) 70%);
 }
 
-/* --- 提示面板 (PANEL) --- */
+/* --- 提示面板 --- */
 .panel {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 20;
     
-    background: rgba(10, 15, 35, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(10, 15, 35, 0.9);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     padding: 24px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
     display: none;
-}
-
-.panel h3 {
-    margin: 0 0 10px 0;
-    color: var(--primary);
-}
-
-.panel p {
-    margin: 0 0 20px 0;
-    opacity: 0.8;
-    font-size: 0.9rem;
-}
-
-.panel button {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all var(--transition-speed) ease;
-}
-
-.panel button:hover {
-    background: var(--primary);
-    color: #000;
-    border-color: var(--primary);
+    max-width: 300px;
 }
