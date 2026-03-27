@@ -1,65 +1,154 @@
-// ===== 等待 THREE 加载 =====
-window.addEventListener("DOMContentLoaded", () => {
-    init3D();
-});
-
-// ===== 3D初始化 =====
-function init3D() {
-    if (typeof THREE === "undefined") {
-        console.warn("THREE 未加载");
-        return;
-    }
-
-    const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(
-        60,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-    );
-    camera.position.z = 18;
-
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.getElementById("three-container").appendChild(renderer.domElement);
-
-    // 光源
-    const light = new THREE.PointLight(0x5ff6ff, 2);
-    light.position.set(10, 10, 10);
-    scene.add(light);
-
-    // 核心
-    const core = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(2, 2),
-        new THREE.MeshBasicMaterial({ wireframe: true, color: 0x5ff6ff })
-    );
-    scene.add(core);
-
-    function animate() {
-        requestAnimationFrame(animate);
-        core.rotation.x += 0.002;
-        core.rotation.y += 0.003;
-        renderer.render(scene, camera);
-    }
-
-    animate();
+:root {
+    --primary: #5ff6ff;
+    --bg: #05070f;
 }
 
-// ===== UI功能 =====
-function toggleExplorerMode() {
-    document.body.classList.toggle("machine-mode");
+/* 基础 */
+body {
+    margin: 0;
+    background: var(--bg);
+    color: white;
+    font-family: system-ui;
+    overflow-x: hidden;
 }
 
-function closePanel() {
-    document.getElementById("node-panel").style.display = "none";
+/* 3D层 */
+#three-container {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
 }
 
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+/* NAV */
+.nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    z-index: 10;
+
+    background: rgba(10,15,35,0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
 }
 
-// ===== 全局导出 =====
-window.toggleExplorerMode = toggleExplorerMode;
-window.closePanel = closePanel;
-window.scrollToTop = scrollToTop;
+.nav__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+/* LOGO */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.logo__img {
+    height: 30px;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.3s;
+}
+
+.logo__img[src] {
+    opacity: 1;
+}
+
+.logo:hover .logo__img {
+    transform: scale(1.1);
+}
+
+/* NAV ITEM */
+.nav__menu {
+    display: flex;
+    gap: 20px;
+}
+
+.nav__item {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.nav__item:hover {
+    opacity: 1;
+}
+
+/* TOGGLE */
+.toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.toggle__switch {
+    width: 40px;
+    height: 20px;
+    background: #aaa;
+    border-radius: 20px;
+    position: relative;
+}
+
+.toggle__dot {
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s;
+}
+
+body.machine-mode .toggle__dot {
+    transform: translateX(20px);
+}
+
+body.machine-mode {
+    --primary: #ff00ff;
+}
+
+/* HERO */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero__title {
+    font-size: 4rem;
+}
+
+/* 渐变稳定 */
+.gradient-text {
+    background: linear-gradient(90deg, #fff, var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    will-change: transform;
+}
+
+/* 能量核心 */
+.hero__core {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(95,246,255,0.2), transparent);
+    filter: blur(30px);
+}
+
+/* PANEL */
+.panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.7);
+    padding: 20px;
+    border-radius: 10px;
+    display: none;
+}
