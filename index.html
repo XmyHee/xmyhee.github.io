@@ -1,62 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuestFrontiers</title>
-
-    <link rel="preload" href="Gemini_001.jpeg" as="image">
-    <link rel="icon" href="Gemini_001.jpeg" type="image/jpeg">
-
-    <link rel="stylesheet" href="style.css">
-
-    <script defer src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#091321">
+<meta name="description" content="Quester · Quest Frontiers 创始人。围绕运行时契约、确定性与权威边界展开研究，坚持契约优先、证据可追溯。">
+<title>Quester — Quest Frontiers</title><link rel="canonical" href="https://questfrontiers.com/"><meta property="og:title" content="Quester — Quest Frontiers"><meta property="og:description" content="契约清晰，边界明确。Quest Frontiers 求索前沿 · Quester 的个人研究主页。"><meta property="og:type" content="website"><meta property="og:url" content="https://questfrontiers.com/"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css"><script src="/script.js" defer></script>
 </head>
-
 <body>
-
-<header class="nav">
-    <div class="nav__inner">
-
-        <div class="logo" onclick="scrollToTop()">
-            <img src="Gemini_001.jpeg" class="logo__img" alt="QuestFrontiers Logo" decoding="async">
-            <span class="logo__text">QuestFrontiers</span>
-        </div>
-
-        <nav class="nav__menu">
-            <div class="nav__item">◎ 前沿疆域</div>
-            <div class="nav__item">◉ 映照引擎</div>
-            <div class="nav__item">⬡ 解决方案</div>
-        </nav>
-
-        <div class="toggle" onclick="toggleExplorerMode()">
-            <span class="toggle__label">探索者模式</span>
-            <div class="toggle__switch">
-                <div class="toggle__dot"></div>
-            </div>
-        </div>
-
-    </div>
+<a class="skip-link" href="#main">跳至正文</a>
+<div class="page-shell">
+<header class="site-header">
+<a class="brand" href="#overview" aria-label="Quest Frontiers 求索前沿 首页"><img src="/assets/quest-frontiers-mark.svg" width="46" height="46" alt=""><span class="brand-name">Quest Frontiers</span><span class="brand-chinese">求索前沿</span></a>
+<nav aria-label="主导航"><a href="#overview" class="active" aria-current="location">项目概览</a><a href="#research">契约与边界</a><a href="#method">验证依据</a></nav>
 </header>
-
-<div id="three-container"></div>
-
-<section class="hero">
-    <div class="hero__core"></div>
-
-    <div class="hero__center">
-        <h1 class="hero__title gradient-text">QuestFrontiers</h1>
-        <p class="hero__subtitle">探索智能 · 映照万象</p>
-    </div>
+<main id="main">
+<section id="overview" class="hero" aria-labelledby="hero-title">
+<div class="hero-grid"><div class="hero-copy">
+<p class="eyebrow">Quest-Frontiers-Runtime</p>
+<h1 id="hero-title">契约清晰，<wbr>边界明确</h1>
+<p class="hero-description">面向运行时平台的契约、边界与验证研究</p>
+<div class="hero-actions"><a class="primary-action" href="#research">项目概览 <span aria-hidden="true">→</span></a><a class="secondary-action" href="https://github.com/XmyHee/xmyhee.github.io" target="_blank" rel="noopener noreferrer">查看仓库 <span aria-hidden="true">↗</span></a></div>
+<p class="hero-byline">Quester <span>/</span> Quest Frontiers 创始人</p>
+</div>
+<div class="brand-art" role="img" aria-label="Quest Frontiers 几何 Q 品牌标志，以方形边界与青色斜线组成。">
+<svg viewBox="0 0 520 450" fill="none" aria-hidden="true"><defs><linearGradient id="art-cyan" x1="125" y1="90" x2="375" y2="90" gradientUnits="userSpaceOnUse"><stop stop-color="#2addec"/><stop offset=".5" stop-color="#5ee8f2"/><stop offset="1" stop-color="#eef5ff"/></linearGradient><linearGradient id="floor" x1="250" y1="355" x2="250" y2="427" gradientUnits="userSpaceOnUse"><stop stop-color="#1d8bbe" stop-opacity=".2"/><stop offset="1" stop-color="#0d1c30" stop-opacity="0"/></linearGradient><radialGradient id="glow"><stop stop-color="#1e87a5" stop-opacity=".1"/><stop offset="1" stop-color="#1e87a5" stop-opacity="0"/></radialGradient></defs>
+<circle cx="270" cy="230" r="200" fill="url(#glow)"/><path d="M30 425 148 363h240l115 62" fill="url(#floor)"/>
+<g stroke="#436c91" stroke-width="1"><path d="M69 40H451V398H69z"/><path d="M98 71H422V369H98z" stroke="#d0e3f0"/><path d="M28 219H494M260 21V418" stroke="#58bedf" stroke-dasharray="7 7"/><path d="m69 40 382 358M451 40 69 398" stroke-opacity=".09"/></g>
+<path d="M142 102H374V334H352V123H164V313H221L240 334H142V102Z" fill="url(#art-cyan)"/>
+<path d="M142 102H260V123H164V313H221L240 334H142V102Z" fill="#33dfef"/>
+<path d="M352 227H374V334H352V227Z" fill="#edf5ff"/>
+<path d="M231 212H261L312 276H282L231 212Z" fill="#52e5f2"/>
+<path d="M203 162H330V272H203z" stroke="#bbd5e8" stroke-width="1"/>
+<path d="M260 102V188M260 272V334M164 219H217M330 219H375" stroke="#5394b9" stroke-opacity=".85"/>
+<g stroke="#73adc8"><path d="M255 40h10M260 35v10M255 398h10M260 393v10M64 219h10M69 214v10M446 219h10M451 214v10"/></g></svg>
+<span class="art-caption">QUEST FRONTIERS <span>CONCEPT / Q</span></span>
+</div></div>
+<div class="hero-pillars">
+<a href="#research" class="pillar"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M44 12H10V54H40M52 12H44V25" stroke="#e6f0fb" stroke-width="1.5"/><path d="M29 36H58" stroke="#34dfed" stroke-width="4"/></svg><div><h2>契约</h2><p>明确约束与职责</p></div><span class="pillar-arrow" aria-hidden="true">↗</span></a>
+<a href="#research" class="pillar"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M16 12V52M48 12V52" stroke="#e6f0fb" stroke-width="1.5"/><path d="M32 8V56" stroke="#34dfed" stroke-width="3"/></svg><div><h2>确定性</h2><p>关注可重放行为</p></div><span class="pillar-arrow" aria-hidden="true">↗</span></a>
+<a href="#method" class="pillar"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M9 9H39V39H9zM26 26H55V55H26z" stroke="#e6f0fb" stroke-width="1.5"/><path d="M26 39V26H39" stroke="#34dfed" stroke-width="2"/></svg><div><h2>验证</h2><p>保留可追溯依据</p></div><span class="pillar-arrow" aria-hidden="true">↗</span></a>
+</div>
 </section>
-
-<aside class="panel" id="node-panel">
-    <h3 id="node-title">AI Node</h3>
-    <p id="node-desc">系统就绪</p>
-    <button onclick="closePanel()">关闭</button>
-</aside>
-
-<script src="script.js" defer></script>
-
-</body>
-</html>
+<section id="research" class="research section-wrap" aria-labelledby="research-title">
+<div class="section-heading"><div><p class="eyebrow">01 / CONTRACT & BOUNDARY</p><h2 id="research-title">从契约出发，<br>厘清运行时边界。</h2></div><p class="section-intro">围绕三个问题展开研究。<br>从语义约束出发，以可追溯证据支撑判断。</p></div>
+<div class="research-list">
+<details class="research-item" open><summary><span class="item-index">01</span><div class="item-title"><h3>契约与关系</h3><span>CONTRACT & RELATIONSHIP</span></div><span class="item-teaser">规则究竟承诺了什么？</span><span class="expand-icon" aria-hidden="true"></span></summary>
+<div class="item-body"><p>关注能力、契约与关系之间的语义是否一致。先明确约束、责任与适用范围，再检查实现是否遵守同一份约定。</p><div class="topic-tags"><span>契约一致性</span><span>关系约束</span><span>阶段边界</span></div><p class="focus-question"><span>核心追问</span>同一份契约，是否导向同一种解释？</p></div></details>
+<details class="research-item"><summary><span class="item-index">02</span><div class="item-title"><h3>确定性与重放</h3><span>DETERMINISM & REPLAY</span></div><span class="item-teaser">相同输入能否复现相同行为？</span><span class="expand-icon" aria-hidden="true"></span></summary>
+<div class="item-body"><p>研究事件日志、运行时状态与状态哈希的边界。以相同输入可重放为目标，审视时间戳、编码与序列化是否改变语义，以及哈希算法是否明确版本。</p><div class="topic-tags"><span>事件日志</span><span>状态哈希</span><span>确定性序列化</span></div><p class="focus-question"><span>核心追问</span>状态能否仅由事件日志推导，并被一致地验证？</p></div></details>
+<details class="research-item"><summary><span class="item-index">03</span><div class="item-title"><h3>权威与验证</h3><span>AUTHORITY & VALIDATION</span></div><span class="item-teaser">判断依据来自哪里？</span><span class="expand-icon" aria-hidden="true"></span></summary>
+<div class="item-body"><p>关注权威变更是否显式、是否版本化，以及冻结的权威是否受到保护。验证同时覆盖异步安全、超时与失败传播，并追溯结论所依据的具体证据。</p><div class="topic-tags"><span>权威边界</span><span>异步安全</span><span>证据追溯</span></div><p class="focus-question"><span>核心追问</span>每一个结论，能否追溯到适用的权威与证据？</p></div></details>
+</div><p class="research-note"><span aria-hidden="true">↳</span>以上为研究关注与审计原则，不代表对项目合规性的验证结论。</p>
+</section>
+<section id="method" class="method section-wrap" aria-labelledby="method-title">
+<div class="section-heading"><div><p class="eyebrow">02 / VALIDATION & EVIDENCE</p><h2 id="method-title">契约在先，<br>证据贯穿始终。</h2></div><p class="section-intro">固定的审查顺序。<br>明确每一阶段可以证明什么。</p></div>
+<div class="method-panel"><div class="method-tabs" role="tablist" aria-label="审计顺序">
+<button role="tab" id="tab-contract" aria-controls="panel-contract" aria-selected="true" tabindex="0" data-tab="contract"><span>01</span><strong>契约</strong><small>CONTRACT</small><i aria-hidden="true">↗</i></button>
+<button role="tab" id="tab-implementation" aria-controls="panel-implementation" aria-selected="false" tabindex="-1" data-tab="implementation"><span>02</span><strong>实现</strong><small>IMPLEMENTATION</small><i aria-hidden="true">↗</i></button>
+<button role="tab" id="tab-tests" aria-controls="panel-tests" aria-selected="false" tabindex="-1" data-tab="tests"><span>03</span><strong>测试</strong><small>TESTS</small><i aria-hidden="true">↗</i></button>
+</div><div class="method-content">
+<div role="tabpanel" id="panel-contract" aria-labelledby="tab-contract" tabindex="0"><p class="panel-label">先确立判断依据</p><h3>契约决定“应该发生什么”。</h3><p>确认权威来源、版本、冻结状态与适用边界。若契约仍有歧义，保留待决问题，避免用现有实现替代契约解释。</p><span class="method-rule">权威明确 · 语义一致 · 责任有界</span></div>
+<div role="tabpanel" id="panel-implementation" aria-labelledby="tab-implementation" tabindex="0" hidden><p class="panel-label">再检查实际行为</p><h3>实现需要接受契约的检视。</h3><p>按照已明确的契约检查行为与责任边界，关注状态推导、确定性、异步安全与失败传播，并为每个判断标明证据。</p><span class="method-rule">实现可核查 · 边界可追溯</span></div>
+<div role="tabpanel" id="panel-tests" aria-labelledby="tab-tests" tabindex="0" hidden><p class="panel-label">最后评估验证覆盖</p><h3>测试通过，不等于契约合规。</h3><p>检查测试覆盖了哪些约束、遗漏了哪些边界。将测试结果放回契约与实现的上下文中，明确证据能够支持的结论范围。</p><span class="method-rule">覆盖有范围 · 结论有依据</span></div>
+<span class="panel-footnote">CONTRACT → IMPLEMENTATION → TESTS</span></div></div>
+<div id="about" class="about"><div class="about-avatar"><img src="/assets/quest-frontiers-mark.svg" width="58" height="58" alt="Quest Frontiers 标志"></div><div class="about-copy"><p class="eyebrow">A NOTE FROM QUESTER</p><h3>让探索保持开放，<br>让判断有据可依。</h3><p>我是 Quester，Quest Frontiers 创始人。这里记录我对运行时契约与边界的研究视角：对规则保持严谨，对结论保持克制。</p></div><div class="about-side"><span>QUEST FRONTIERS</span><p>Same Contract<br>Same Interpretation<br>Same Boundary<br>Same Behavior<span class="end-mark">↗</span></p></div></div>
+</section></main>
+<footer class="site-footer"><span>© 2026 Quest Frontiers 求索前沿 <span class="footer-separator">/</span> Quester</span><div><button id="source-open" aria-haspopup="dialog">内容依据 <span aria-hidden="true">↗</span></button><a href="https://github.com/XmyHee/xmyhee.github.io" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="#overview">返回顶部 ↑</a></div></footer></div>
+<dialog id="source-dialog" aria-labelledby="source-title"><div class="dialog-head"><span class="eyebrow">CONTENT NOTES</span><button id="source-close" aria-label="关闭内容依据">×</button></div><h2 id="source-title">内容依据与边界</h2><p>身份与主题依据 Quester 提供的个人简介，以及本次选择的「项目研究名片」用途。品牌视觉依据 Quester 提供的「求索前沿品牌概念提案」参考图。</p><p>研究方向与方法依据 Quester 提供的运行时审计准则：契约优先，关注确定性、权威边界、异步安全与证据追溯。</p><p>本站陈述个人研究关注与工作原则；未发布项目内部日志、审计报告或合规性结论。</p><span class="dialog-footer">QUEST FRONTIERS / PERSONAL RESEARCH</span></dialog>
+</body></html>
